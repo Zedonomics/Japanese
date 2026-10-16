@@ -1,13 +1,14 @@
 # Device verification checklist
 
-**Status: Android release installation and native startup checked on a Pixel 9 Pro; lesson and input checks remain pending.** The iPhone, iOS simulator smoke test, and remote CI workflow are also pending until a run is recorded. Automated tests with a fake recognizer verify application behavior; they do not measure native recognition accuracy or keyboard conversion behavior.
+**Status: Pixel 9 Pro startup, lesson flow, model download/basic recognition, canvas gestures, offline drawing, and lesson recovery checked. Android release startup and the unsigned iOS simulator build/native smoke test passed in CI.** Detailed keyboard conversion, confusable-character accuracy, interrupted downloads, and other devices still need checks. Automated tests with a fake recognizer verify application behavior; they do not measure native recognition accuracy or keyboard conversion behavior.
 
 Record the date, commit, phone/simulator model, OS version, app build, Japanese keyboard, and model-download status for each run. Check a box only after observing the result, and attach failure details when a check fails.
 
 ## Installation and startup
 
-- [x] Pixel 9 Pro, Android 17 (API 37), version 1.0.1: install the APK, launch, and reach Learn. Native startup passed; user confirmed the Learn screen appears. Other Android versions remain untested.
-- [ ] iOS simulator: complete the unsigned build and native smoke test; verify SQLite startup.
+- [x] Pixel 9 Pro, Android 17 (API 37), versions 1.0.1 and 1.0.2: same-signature updates, native cold-start checks, and user confirmation that Learn appears. Other physical Android devices remain untested.
+- [x] Android API 36 emulator, version 1.0.2: CI installed the optimized release APK, verified it was not debuggable, observed a stable foreground process, reached Learn, and checked scoped logs for fatal errors. [Run 38967393443](https://github.com/Zedonomics/Japanese/actions/runs/38967393443).
+- [x] iPhone 16 Pro simulator, iOS 18.5: unsigned build and native smoke test passed, including real SQLite startup, saved answer/progress, and model-independent canvas input. [Run 38967393443](https://github.com/Zedonomics/Japanese/actions/runs/38967393443).
 - [ ] iPhone iOS 15.5 or newer: configure personal signing on a Mac, install, and reach Learn. Signing is not configured in the repository.
 - [ ] Open Library and inspect kana, combinations, symbol mini-lessons, and the ranked kanji list; verify Japanese text and stroke guides render.
 - [ ] Check a small phone, system large text, light/dark appearance, keyboard visible, and rotation for clipped controls or overflow.
@@ -26,6 +27,8 @@ Record the date, commit, phone/simulator model, OS version, app build, Japanese 
 
 ## Model download and real handwriting
 
+- [x] Pixel 9 Pro, Android 17: user completed the Japanese model download and observed native drawing recognition.
+- [x] Version 1.0.2: user confirmed vertical-first strokes draw without scrolling the page, and scrolling outside the writing cell still works.
 - [ ] Before downloading a model, drawing shows its setup state and keyboard lessons work.
 - [ ] Start the Japanese model download online; verify ready state. Test a failed/interrupted download and a successful retry.
 - [ ] Draw with a finger and, if available, a stylus. Confirm Undo, Clear, single dots, pen lifts, and strokes near cell boundaries behave naturally.
@@ -39,6 +42,7 @@ Record the date, commit, phone/simulator model, OS version, app build, Japanese 
 
 ## Persistence, offline use, and update
 
+- [x] Version 1.0.2, Pixel 9 Pro: with Wi-Fi and mobile data disabled, the user completed a drawing answer, closed and reopened Kana Path, and confirmed that drawing worked offline and the unfinished lesson resumed.
 - [ ] With the model downloaded, turn on airplane mode. Start lessons, type answers, draw, view guides, and reopen the app successfully.
 - [ ] Close/force-stop during an introduction, before an answer, and on graded feedback; relaunch and resume the exact saved point without counting an answer twice.
 - [ ] Practice the same target repeatedly on one date; confirm it cannot gain a second scheduled mastery step. Mistakes and reveals reset that skill and schedule a retry in ten minutes.
@@ -54,5 +58,8 @@ Record the date, commit, phone/simulator model, OS version, app build, Japanese 
 | 2026-10-16 / 1.0.0 build 1 | Pixel 9 Pro / Android 17 (API 37) | Reproduce immediate startup failure | Failed: WorkManager Room constructor removed by release optimization |
 | 2026-10-16 / 1.0.1 build 2 | Pixel 9 Pro / Android 17 (API 37) | Same-signature update; non-debuggable cold start, 15 seconds, scoped logs; user opened app | Passed native startup; no fatal errors; user confirmed Learn appears. Lesson/input testing pending |
 | 2026-10-16 / 1.0.1 build 2 | Pixel 9 Pro / Android 17 (API 37) | User completed lesson input/feedback/advance and downloaded handwriting model | Lesson and native model/recognition work. Failed canvas gesture: vertical-first strokes scroll the lesson; horizontal-first strokes can draw |
-| Pending | iOS simulator / CI | Not run | Pending |
+| 2026-10-16 / 1.0.2 build 3 | Pixel 9 Pro / Android 17 (API 37) | Same-signature update; ten-second native cold start; user checked vertical drawing and scrolling outside the canvas | Passed startup with saved model ready; user confirmed both drawing and outside scrolling work |
+| 2026-10-16 / 1.0.2 build 3 | Pixel 9 Pro / Android 17 (API 37), Wi-Fi and mobile data disabled | User completed a drawing answer, closed and reopened the app | Passed offline recognition and unfinished-lesson recovery |
+| 2026-10-16 / 261c365 | Android API 36 Google APIs x86_64 emulator / CI | Install the optimized 1.0.2 release; cold-start with fresh storage and no handwriting model | Passed non-debuggable APK, stable process, foreground activity, loaded home, and fatal-log checks |
+| 2026-10-16 / 261c365 | iPhone 16 Pro simulator / iOS 18.5 / macOS 15 CI | Unsigned build, native SQLite startup, lesson feedback/progress persistence, drawing/clear | Passed; no model download or native recognition-accuracy claim |
 | Pending | Physical iPhone | Not run | Signing and verification deferred |
