@@ -185,6 +185,31 @@ jobs:
           flutter-version: '3.47.7'
           channel: stable
           cache: true
+      - name: Backport upstream simulator log readiness fix to CI tools
+        run: |
+          set -euo pipefail
+          task_sdk="$(cd "$FLUTTER_ROOT" && pwd -P)"
+          task_cache="$(cd "$task_sdk/bin/cache" && pwd -P)"
+          [[ "$task_cache" == "$task_sdk/"* ]] || { echo 'Flutter cache is outside the selected SDK'; exit 1; }
+          [[ "$(git -C "$task_sdk" rev-parse HEAD)" == abaf9c523780a608bd46686fd5e53740a07077f8 ]] || { echo 'Unexpected Flutter SDK revision'; exit 1; }
+          task_patch="$RUNNER_TEMP/flutter-ios-log-ready.patch"
+          curl --fail --location --retry 2 'https://github.com/flutter/flutter/commit/c3ed85ef987759ee54a6bce275490cde2a238dc1.patch' --output "$task_patch"
+          echo "31ff005d55f21527520575335ce30627726b11fe12b6672a3b5e98cefe3d1efb  $task_patch" | shasum -a 256 --check
+          task_file='packages/flutter_tools/lib/src/ios/simulators.dart'
+          # -C1 preserves the exact upstream delta while tolerating the stable
+          # branch's missing, unrelated cpuArch getter in surrounding context.
+          if git -C "$task_sdk" apply --check -C1 --include="$task_file" "$task_patch"; then
+            git -C "$task_sdk" apply -C1 --include="$task_file" "$task_patch"
+          elif git -C "$task_sdk" apply --reverse --check -C1 --include="$task_file" "$task_patch"; then
+            echo 'Upstream simulator fix is already present in the cached SDK'
+          else
+            echo 'Unexpected Flutter simulator tool source; refusing to patch'
+            exit 1
+          fi
+          # Source edits alone do not invalidate Flutter's compiled tool cache.
+          # Remove only these two files inside the validated SDK cache directory.
+          rm -f -- "$task_cache/flutter_tools.stamp" "$task_cache/flutter_tools.snapshot"
+          flutter --version
       - name: Cache CocoaPods downloads
         uses: actions/cache@v4
         with:
@@ -214,7 +239,46 @@ jobs:
           echo "device_id=$simulator_id" >> "$GITHUB_OUTPUT"
       - name: Native SQLite and UI smoke test
         timeout-minutes: 12
-        run: flutter test integration_test/app_smoke_test.dart -d '${{ steps.simulator.outputs.device_id }}'
+        run: |
+          set -o pipefail
+          mkdir -p build/ios-smoke
+          flutter test --verbose integration_test/app_smoke_test.dart -d '${{ steps.simulator.outputs.device_id }}' 2>&1 | tee build/ios-smoke/flutter-test.log
+      - name: Capture bounded iOS failure diagnostics
+        if: failure() && steps.simulator.outputs.device_id != ''
+        timeout-minutes: 2
+        env:
+          KANA_SIMULATOR_ID: ${{ steps.simulator.outputs.device_id }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import pathlib
+          import subprocess
+          evidence = pathlib.Path('build/ios-smoke')
+          evidence.mkdir(parents=True, exist_ok=True)
+          device = os.environ['KANA_SIMULATOR_ID']
+          commands = [
+              ('screenshot', ['xcrun', 'simctl', 'io', device, 'screenshot', str(evidence / 'screen.png')]),
+              ('runner-log', ['xcrun', 'simctl', 'spawn', device, 'log', 'show', '--last', '5m', '--style', 'compact', '--predicate', 'process == "Runner"']),
+          ]
+          status = {}
+          for name, command in commands:
+              try:
+                  with (evidence / (name + '.txt')).open('w') as output:
+                      result = subprocess.run(command, stdout=output, stderr=subprocess.STDOUT, timeout=30)
+                  status[name] = {'exitCode': result.returncode}
+              except subprocess.TimeoutExpired:
+                  status[name] = {'timeoutSeconds': 30}
+          (evidence / 'capture-status.json').write_text(json.dumps(status, indent=2))
+          PY
+      - name: Preserve iOS native smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-native-smoke-evidence
+          path: build/ios-smoke/
+          if-no-files-found: warn
+          retention-days: 7
       - uses: actions/upload-artifact@v4
         with:
           name: ios-unsigned-simulator-app
