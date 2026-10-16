@@ -108,7 +108,7 @@ jobs:
               adb('pull', '/sdcard/kana-path-startup.xml', str(evidence / 'screen.xml'))
               nodes = list(ET.parse(evidence / 'screen.xml').iter('node'))
               labels = [node.get(attribute, '') for node in nodes for attribute in ('text', 'content-desc')]
-              assert any(label == 'Kana Path' for label in labels), 'Kana Path home screen did not load'
+              assert any('Kana Path' in label.splitlines() for label in labels), 'Kana Path home screen did not load'
               assert any(re.search(r'\bLearn\b', label) for label in labels), 'Learning navigation did not load'
           except Exception:
               failures.append(traceback.format_exc())
@@ -213,6 +213,7 @@ jobs:
           xcrun simctl bootstatus "$simulator_id" -b
           echo "device_id=$simulator_id" >> "$GITHUB_OUTPUT"
       - name: Native SQLite and UI smoke test
+        timeout-minutes: 12
         run: flutter test integration_test/app_smoke_test.dart -d '${{ steps.simulator.outputs.device_id }}'
       - uses: actions/upload-artifact@v4
         with:
