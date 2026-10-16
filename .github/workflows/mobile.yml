@@ -1,0 +1,103 @@
+name: Mobile checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    name: Android tests and APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+      - uses: android-actions/setup-android@v3
+        with:
+          cmdline-tools-version: '13114758'
+          packages: platform-tools
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.7'
+          channel: stable
+          cache: true
+      - name: Cache Android NDK
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.ANDROID_HOME }}/ndk/28.2.13676358
+          key: ${{ runner.os }}-android-ndk-28.2.13676358
+      - name: Install Android native build components
+        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'ndk;28.2.13676358'
+      - name: Resolve packages
+        run: flutter pub get
+      - name: Analyze
+        run: flutter analyze
+      - name: Unit and widget tests
+        run: flutter test
+      - name: Build personal debug APK
+        run: flutter build apk --debug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
+
+  ios:
+    name: iOS simulator build and native smoke test
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.7'
+          channel: stable
+          cache: true
+      - name: Cache CocoaPods downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile', 'pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pods-
+      - name: Prepare CocoaPods integration
+        run: |
+          flutter config --no-enable-swift-package-manager
+          flutter precache --ios
+          flutter pub get
+          pod --version
+          cd ios
+          pod install
+      - name: Build unsigned simulator app
+        run: flutter build ios --simulator --debug --no-codesign
+      - name: Package unsigned simulator build
+        run: ditto -c -k --sequesterRsrc --keepParent build/ios/iphonesimulator/Runner.app build/ios/kana-path-simulator.zip
+      - name: Boot an available iPhone simulator
+        id: simulator
+        run: |
+          simulator_id=$(xcrun simctl list devices available --json | python3 -c 'import json,sys; data=json.load(sys.stdin); phones=[d for runtime, devices in data["devices"].items() if ".iOS-" in runtime for d in devices if d.get("isAvailable") and d["name"].startswith("iPhone")]; assert phones, "No available iPhone simulator runtime"; print(phones[0]["udid"])')
+          xcrun simctl boot "$simulator_id" || true
+          xcrun simctl bootstatus "$simulator_id" -b
+          echo "device_id=$simulator_id" >> "$GITHUB_OUTPUT"
+      - name: Native SQLite and UI smoke test
+        run: flutter test integration_test/app_smoke_test.dart -d '${{ steps.simulator.outputs.device_id }}'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-unsigned-simulator-app
+          path: build/ios/kana-path-simulator.zip
+          if-no-files-found: error
+          retention-days: 7

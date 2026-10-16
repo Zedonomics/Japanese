@@ -1,0 +1,24 @@
+{
+    "schemaVersion":  1,
+    "reviewedOn":  "2026-10-16",
+    "kanjidic2":  {
+                      "url":  "https://www.edrdg.org/kanjidic/kanjidic2.xml.gz",
+                      "dateOfCreation":  "2026-10-16",
+                      "databaseVersion":  "2026-289",
+                      "sha256":  "69bfe12d43636465a860bcd49cf33ebcc5eb4b8632dff261d0ed4c6f0c2259f8",
+                      "license":  "CC-BY-SA-4.0",
+                      "ranking":  "Newspaper frequency ranks supplied by KANJIDIC2; not a universal ordering of everyday spoken Japanese."
+                  },
+    "jmdict":  {
+                   "url":  "https://www.edrdg.org/pub/Nihongo/JMdict_e.gz",
+                   "dateOfCreation":  "2026-10-16",
+                   "sha256":  "3846524394e7b149f88f1cf09d9d6b10aa0b0e05267cd180bfb5eea31873952b",
+                   "license":  "CC-BY-SA-4.0"
+               },
+    "kanjivg":  {
+                    "url":  "https://github.com/KanjiVG/kanjivg",
+                    "commit":  "70a0b7ae0c18ceb5cb358274b029cce0234a43bc",
+                    "license":  "CC-BY-SA-3.0",
+                    "changes":  "None. Selected original SVG files are bundled unchanged."
+                }
+}

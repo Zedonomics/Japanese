@@ -1,0 +1,43 @@
+Japanese learning curriculum and stroke diagrams
+
+DICTIONARY DATA
+This app uses KANJIDIC2 and the Japanese/English components of JMdict, copyright
+James William Breen and the Electronic Dictionary Research and Development
+Group (EDRDG). Used under the Creative Commons Attribution-ShareAlike 4.0
+International license (CC BY-SA 4.0).
+
+KANJIDIC2 provides the top-100 kanji selection, newspaper frequency ranks, and
+reading verification. JMdict provides verification of example words, readings,
+and meanings. The app's curated selection, condensed meanings, explanations,
+and curriculum arrangement are adaptations. The dictionary-derived curriculum
+in assets/curriculum/ is distributed under CC BY-SA 4.0. This notice does not
+change the separate license of the application's software.
+
+The 100-kanji ordering reflects the newspaper-frequency data distributed by
+KANJIDIC2, not a universal ranking of everyday spoken Japanese. Only the
+explicitly taught reading is assessed; Japanese characters can have other
+correct readings in other contexts.
+
+Dictionary project: https://www.edrdg.org/
+KANJIDIC2: https://www.edrdg.org/kanjidic/kanjidic2.xml.gz
+JMdict: https://www.edrdg.org/pub/Nihongo/JMdict_e.gz
+EDRDG license statement: https://www.edrdg.org/edrdg/licence.html
+License: https://creativecommons.org/licenses/by-sa/4.0/
+Local license: assets/licenses/CC-BY-SA-4.0.txt
+Local EDRDG statement: assets/licenses/EDRDG-licence.html
+Local KANJIDIC2 documentation: assets/licenses/KANJIDIC2-documentation.html
+Versions, source hashes, and entry evidence: assets/curriculum/sources.json
+and assets/curriculum/dictionary_evidence.json.
+
+STROKE DIAGRAMS
+KanjiVG is copyright 2009-2026 Ulrich Apel and contributors. Selected original
+SVG files are bundled unchanged under Creative Commons Attribution-ShareAlike
+3.0 Unported (CC BY-SA 3.0).
+
+Project: https://kanjivg.tagaini.net/
+Source: https://github.com/KanjiVG/kanjivg
+Commit: 70a0b7ae0c18ceb5cb358274b029cce0234a43bc
+License: https://creativecommons.org/licenses/by-sa/3.0/
+Local license: assets/licenses/KanjiVG-COPYING.txt
+
+Neither EDRDG nor KanjiVG endorses this app.

@@ -1,0 +1,115 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:kana_path/app_controller.dart';
+import 'package:kana_path/domain/domain.dart';
+import 'package:kana_path/main.dart' as app;
+import 'package:kana_path/ui/drawing_pad.dart';
+import 'package:kana_path/ui/kana_path_app.dart';
+import 'package:kana_path/ui/lesson_screen.dart';
+import 'package:kana_path/ui/ui_contract.dart';
+
+Future<void> waitUntil(WidgetTester tester, bool Function() ready) async {
+  final deadline = DateTime.now().add(const Duration(seconds: 30));
+  while (!ready()) {
+    if (DateTime.now().isAfter(deadline)) {
+      fail(
+        'Native app startup or storage operation did not finish in 30 seconds.',
+      );
+    }
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+  await tester.pumpAndSettle();
+}
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('native startup, saved answer, and model-independent drawing input', (
+    tester,
+  ) async {
+    app.main();
+    await tester.pump();
+    final controller =
+        tester.widget<KanaPathApp>(find.byType(KanaPathApp)).controller
+            as AppController;
+    addTearDown(controller.close);
+    await waitUntil(tester, () => !controller.loading);
+    expect(controller.error, isNull);
+    expect(controller.curriculum.length, 311);
+    expect(find.text('Kana Path'), findsOneWidget);
+
+    // This test uses the real native SQLite database. Use a dedicated simulator
+    // or test install, not the phone installation containing personal progress.
+    await controller.abandonLesson();
+    await controller.startLesson(LessonScope.hiragana, LessonFocus.reading);
+    controller.completeIntroduction();
+    await waitUntil(tester, () => !controller.busy);
+    final resume = find.text('Pick up where you left off');
+    await tester.ensureVisible(resume);
+    await tester.tap(resume);
+    await tester.pumpAndSettle();
+    expect(find.byType(LessonScreen), findsOneWidget);
+    final question = controller.activeSession!.currentQuestion!;
+    final item = controller.curriculum.firstWhere(
+      (i) => i.id == question.itemId,
+    );
+    final answer = question.expectedAnswerFor(item);
+    await tester.enterText(find.byType(TextField), answer);
+    final check = find.text('Check answer');
+    await tester.ensureVisible(check);
+    await tester.tap(check);
+    await waitUntil(tester, () => !controller.busy);
+    expect(controller.feedback!.outcome, ReviewOutcome.correct);
+    expect(controller.activeSession!.currentIndex, 0);
+    expect(
+      controller.progress[SkillProgress.keyFor(item.id, question.skill)],
+      isNotNull,
+    );
+
+    // Switch to a drawing question without ever downloading a recognition model.
+    await controller.abandonLesson();
+    await controller.startLesson(LessonScope.hiragana, LessonFocus.drawing);
+    controller.completeIntroduction();
+    await waitUntil(tester, () => !controller.busy);
+    // The open lesson route reacts to the controller's replacement session.
+    expect(find.byType(LessonScreen), findsOneWidget);
+    if (controller.modelStatus == HandwritingModelStatus.ready) {
+      expect(find.byType(DrawingPad), findsOneWidget);
+    } else {
+      expect(find.text('Download model'), findsOneWidget);
+    }
+
+    // Exercise the same production canvas offline regardless of model readiness.
+    // This validates touch capture and coordinates, not native recognition.
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Center(
+            child: SizedBox(
+              width: 300,
+              child: DrawingPad(cells: 1, enabled: true, onChanged: (_) {}),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final canvas = find
+        .descendant(
+          of: find.byType(DrawingPad),
+          matching: find.byType(GestureDetector),
+        )
+        .first;
+    await tester.drag(canvas, const Offset(60, 50));
+    await tester.pump();
+    final state = tester.state<DrawingPadState>(find.byType(DrawingPad));
+    expect(state.submission.strokes, isNotEmpty);
+    expect(state.submission.width, greaterThan(0));
+    expect(state.submission.height, greaterThan(0));
+    await tester.tap(find.text('Clear'));
+    await tester.pump();
+    expect(state.submission.strokes, isEmpty);
+    expect(tester.takeException(), isNull);
+  });
+}

@@ -1,0 +1,802 @@
+[
+    {
+        "glyph":  "日",
+        "frequencyRank":  1,
+        "contextWord":  "日",
+        "contextReading":  "ひ",
+        "jmdictEntryId":  "1463770",
+        "readingKana":  "ひ"
+    },
+    {
+        "glyph":  "一",
+        "frequencyRank":  2,
+        "contextWord":  "一つ",
+        "contextReading":  "ひとつ",
+        "jmdictEntryId":  "1160820",
+        "readingKana":  "ひと"
+    },
+    {
+        "glyph":  "国",
+        "frequencyRank":  3,
+        "contextWord":  "国",
+        "contextReading":  "くに",
+        "jmdictEntryId":  "1592250",
+        "readingKana":  "くに"
+    },
+    {
+        "glyph":  "会",
+        "frequencyRank":  4,
+        "contextWord":  "会社",
+        "contextReading":  "かいしゃ",
+        "jmdictEntryId":  "1198550",
+        "readingKana":  "かい"
+    },
+    {
+        "glyph":  "人",
+        "frequencyRank":  5,
+        "contextWord":  "人",
+        "contextReading":  "ひと",
+        "jmdictEntryId":  "1580640",
+        "readingKana":  "ひと"
+    },
+    {
+        "glyph":  "年",
+        "frequencyRank":  6,
+        "contextWord":  "年",
+        "contextReading":  "とし",
+        "jmdictEntryId":  "1468060",
+        "readingKana":  "とし"
+    },
+    {
+        "glyph":  "大",
+        "frequencyRank":  7,
+        "contextWord":  "大学",
+        "contextReading":  "だいがく",
+        "jmdictEntryId":  "1413240",
+        "readingKana":  "だい"
+    },
+    {
+        "glyph":  "十",
+        "frequencyRank":  8,
+        "contextWord":  "十",
+        "contextReading":  "じゅう",
+        "jmdictEntryId":  "1579840",
+        "readingKana":  "じゅう"
+    },
+    {
+        "glyph":  "二",
+        "frequencyRank":  9,
+        "contextWord":  "二",
+        "contextReading":  "に",
+        "jmdictEntryId":  "1461140",
+        "readingKana":  "に"
+    },
+    {
+        "glyph":  "本",
+        "frequencyRank":  10,
+        "contextWord":  "本",
+        "contextReading":  "ほん",
+        "jmdictEntryId":  "1522150",
+        "readingKana":  "ほん"
+    },
+    {
+        "glyph":  "中",
+        "frequencyRank":  11,
+        "contextWord":  "中",
+        "contextReading":  "なか",
+        "jmdictEntryId":  "1423310",
+        "readingKana":  "なか"
+    },
+    {
+        "glyph":  "長",
+        "frequencyRank":  12,
+        "contextWord":  "長い",
+        "contextReading":  "ながい",
+        "jmdictEntryId":  "1429750",
+        "readingKana":  "なが"
+    },
+    {
+        "glyph":  "出",
+        "frequencyRank":  13,
+        "contextWord":  "出る",
+        "contextReading":  "でる",
+        "jmdictEntryId":  "1338240",
+        "readingKana":  "で"
+    },
+    {
+        "glyph":  "三",
+        "frequencyRank":  14,
+        "contextWord":  "三",
+        "contextReading":  "さん",
+        "jmdictEntryId":  "1579350",
+        "readingKana":  "さん"
+    },
+    {
+        "glyph":  "同",
+        "frequencyRank":  15,
+        "contextWord":  "同じ",
+        "contextReading":  "おなじ",
+        "jmdictEntryId":  "1451750",
+        "readingKana":  "おな"
+    },
+    {
+        "glyph":  "時",
+        "frequencyRank":  16,
+        "contextWord":  "時間",
+        "contextReading":  "じかん",
+        "jmdictEntryId":  "1315920",
+        "readingKana":  "じ"
+    },
+    {
+        "glyph":  "政",
+        "frequencyRank":  17,
+        "contextWord":  "政治",
+        "contextReading":  "せいじ",
+        "jmdictEntryId":  "1375970",
+        "readingKana":  "せい"
+    },
+    {
+        "glyph":  "事",
+        "frequencyRank":  18,
+        "contextWord":  "事",
+        "contextReading":  "こと",
+        "jmdictEntryId":  "1313580",
+        "readingKana":  "こと"
+    },
+    {
+        "glyph":  "自",
+        "frequencyRank":  19,
+        "contextWord":  "自分",
+        "contextReading":  "じぶん",
+        "jmdictEntryId":  "1318610",
+        "readingKana":  "じ"
+    },
+    {
+        "glyph":  "行",
+        "frequencyRank":  20,
+        "contextWord":  "行く",
+        "contextReading":  "いく",
+        "jmdictEntryId":  "1578850",
+        "readingKana":  "い"
+    },
+    {
+        "glyph":  "社",
+        "frequencyRank":  21,
+        "contextWord":  "会社",
+        "contextReading":  "かいしゃ",
+        "jmdictEntryId":  "1198550",
+        "readingKana":  "しゃ"
+    },
+    {
+        "glyph":  "見",
+        "frequencyRank":  22,
+        "contextWord":  "見る",
+        "contextReading":  "みる",
+        "jmdictEntryId":  "1259290",
+        "readingKana":  "み"
+    },
+    {
+        "glyph":  "月",
+        "frequencyRank":  23,
+        "contextWord":  "月",
+        "contextReading":  "つき",
+        "jmdictEntryId":  "1255430",
+        "readingKana":  "つき"
+    },
+    {
+        "glyph":  "分",
+        "frequencyRank":  24,
+        "contextWord":  "分かる",
+        "contextReading":  "わかる",
+        "jmdictEntryId":  "1606560",
+        "readingKana":  "わ"
+    },
+    {
+        "glyph":  "議",
+        "frequencyRank":  25,
+        "contextWord":  "会議",
+        "contextReading":  "かいぎ",
+        "jmdictEntryId":  "1198360",
+        "readingKana":  "ぎ"
+    },
+    {
+        "glyph":  "後",
+        "frequencyRank":  26,
+        "contextWord":  "後",
+        "contextReading":  "あと",
+        "jmdictEntryId":  "1269320",
+        "readingKana":  "あと"
+    },
+    {
+        "glyph":  "前",
+        "frequencyRank":  27,
+        "contextWord":  "前",
+        "contextReading":  "まえ",
+        "jmdictEntryId":  "1392580",
+        "readingKana":  "まえ"
+    },
+    {
+        "glyph":  "民",
+        "frequencyRank":  28,
+        "contextWord":  "国民",
+        "contextReading":  "こくみん",
+        "jmdictEntryId":  "1287070",
+        "readingKana":  "みん"
+    },
+    {
+        "glyph":  "生",
+        "frequencyRank":  29,
+        "contextWord":  "生きる",
+        "contextReading":  "いきる",
+        "jmdictEntryId":  "1378520",
+        "readingKana":  "い"
+    },
+    {
+        "glyph":  "連",
+        "frequencyRank":  30,
+        "contextWord":  "連絡",
+        "contextReading":  "れんらく",
+        "jmdictEntryId":  "1559900",
+        "readingKana":  "れん"
+    },
+    {
+        "glyph":  "五",
+        "frequencyRank":  31,
+        "contextWord":  "五",
+        "contextReading":  "ご",
+        "jmdictEntryId":  "1268060",
+        "readingKana":  "ご"
+    },
+    {
+        "glyph":  "発",
+        "frequencyRank":  32,
+        "contextWord":  "発音",
+        "contextReading":  "はつおん",
+        "jmdictEntryId":  "1477170",
+        "readingKana":  "はつ"
+    },
+    {
+        "glyph":  "間",
+        "frequencyRank":  33,
+        "contextWord":  "時間",
+        "contextReading":  "じかん",
+        "jmdictEntryId":  "1315920",
+        "readingKana":  "かん"
+    },
+    {
+        "glyph":  "対",
+        "frequencyRank":  34,
+        "contextWord":  "反対",
+        "contextReading":  "はんたい",
+        "jmdictEntryId":  "1480670",
+        "readingKana":  "たい"
+    },
+    {
+        "glyph":  "上",
+        "frequencyRank":  35,
+        "contextWord":  "上",
+        "contextReading":  "うえ",
+        "jmdictEntryId":  "1352130",
+        "readingKana":  "うえ"
+    },
+    {
+        "glyph":  "部",
+        "frequencyRank":  36,
+        "contextWord":  "部分",
+        "contextReading":  "ぶぶん",
+        "jmdictEntryId":  "1499490",
+        "readingKana":  "ぶ"
+    },
+    {
+        "glyph":  "東",
+        "frequencyRank":  37,
+        "contextWord":  "東",
+        "contextReading":  "ひがし",
+        "jmdictEntryId":  "1447440",
+        "readingKana":  "ひがし"
+    },
+    {
+        "glyph":  "者",
+        "frequencyRank":  38,
+        "contextWord":  "医者",
+        "contextReading":  "いしゃ",
+        "jmdictEntryId":  "1159980",
+        "readingKana":  "しゃ"
+    },
+    {
+        "glyph":  "党",
+        "frequencyRank":  39,
+        "contextWord":  "政党",
+        "contextReading":  "せいとう",
+        "jmdictEntryId":  "1376060",
+        "readingKana":  "とう"
+    },
+    {
+        "glyph":  "地",
+        "frequencyRank":  40,
+        "contextWord":  "地図",
+        "contextReading":  "ちず",
+        "jmdictEntryId":  "1421290",
+        "readingKana":  "ち"
+    },
+    {
+        "glyph":  "合",
+        "frequencyRank":  41,
+        "contextWord":  "合う",
+        "contextReading":  "あう",
+        "jmdictEntryId":  "1284430",
+        "readingKana":  "あ"
+    },
+    {
+        "glyph":  "市",
+        "frequencyRank":  42,
+        "contextWord":  "市長",
+        "contextReading":  "しちょう",
+        "jmdictEntryId":  "1308610",
+        "readingKana":  "し"
+    },
+    {
+        "glyph":  "業",
+        "frequencyRank":  43,
+        "contextWord":  "授業",
+        "contextReading":  "じゅぎょう",
+        "jmdictEntryId":  "1330290",
+        "readingKana":  "ぎょう"
+    },
+    {
+        "glyph":  "内",
+        "frequencyRank":  44,
+        "contextWord":  "内",
+        "contextReading":  "うち",
+        "jmdictEntryId":  "1457730",
+        "readingKana":  "うち"
+    },
+    {
+        "glyph":  "相",
+        "frequencyRank":  45,
+        "contextWord":  "相談",
+        "contextReading":  "そうだん",
+        "jmdictEntryId":  "1401210",
+        "readingKana":  "そう"
+    },
+    {
+        "glyph":  "方",
+        "frequencyRank":  46,
+        "contextWord":  "方向",
+        "contextReading":  "ほうこう",
+        "jmdictEntryId":  "1516990",
+        "readingKana":  "ほう"
+    },
+    {
+        "glyph":  "四",
+        "frequencyRank":  47,
+        "contextWord":  "四",
+        "contextReading":  "よん",
+        "jmdictEntryId":  "1579470",
+        "readingKana":  "よん"
+    },
+    {
+        "glyph":  "定",
+        "frequencyRank":  48,
+        "contextWord":  "予定",
+        "contextReading":  "よてい",
+        "jmdictEntryId":  "1543240",
+        "readingKana":  "てい"
+    },
+    {
+        "glyph":  "今",
+        "frequencyRank":  49,
+        "contextWord":  "今",
+        "contextReading":  "いま",
+        "jmdictEntryId":  "1288850",
+        "readingKana":  "いま"
+    },
+    {
+        "glyph":  "回",
+        "frequencyRank":  50,
+        "contextWord":  "一回",
+        "contextReading":  "いっかい",
+        "jmdictEntryId":  "1161310",
+        "readingKana":  "かい"
+    },
+    {
+        "glyph":  "新",
+        "frequencyRank":  51,
+        "contextWord":  "新しい",
+        "contextReading":  "あたらしい",
+        "jmdictEntryId":  "1361490",
+        "readingKana":  "あたら"
+    },
+    {
+        "glyph":  "場",
+        "frequencyRank":  52,
+        "contextWord":  "場所",
+        "contextReading":  "ばしょ",
+        "jmdictEntryId":  "1355850",
+        "readingKana":  "ば"
+    },
+    {
+        "glyph":  "金",
+        "frequencyRank":  53,
+        "contextWord":  "金",
+        "contextReading":  "かね",
+        "jmdictEntryId":  "1242590",
+        "readingKana":  "かね"
+    },
+    {
+        "glyph":  "員",
+        "frequencyRank":  54,
+        "contextWord":  "店員",
+        "contextReading":  "てんいん",
+        "jmdictEntryId":  "1440670",
+        "readingKana":  "いん"
+    },
+    {
+        "glyph":  "九",
+        "frequencyRank":  55,
+        "contextWord":  "九",
+        "contextReading":  "きゅう",
+        "jmdictEntryId":  "1578150",
+        "readingKana":  "きゅう"
+    },
+    {
+        "glyph":  "入",
+        "frequencyRank":  56,
+        "contextWord":  "入る",
+        "contextReading":  "はいる",
+        "jmdictEntryId":  "1465590",
+        "readingKana":  "はい"
+    },
+    {
+        "glyph":  "選",
+        "frequencyRank":  57,
+        "contextWord":  "選ぶ",
+        "contextReading":  "えらぶ",
+        "jmdictEntryId":  "1588730",
+        "readingKana":  "えら"
+    },
+    {
+        "glyph":  "立",
+        "frequencyRank":  58,
+        "contextWord":  "立つ",
+        "contextReading":  "たつ",
+        "jmdictEntryId":  "1597040",
+        "readingKana":  "た"
+    },
+    {
+        "glyph":  "開",
+        "frequencyRank":  59,
+        "contextWord":  "開く",
+        "contextReading":  "あく",
+        "jmdictEntryId":  "1586270",
+        "readingKana":  "あ"
+    },
+    {
+        "glyph":  "手",
+        "frequencyRank":  60,
+        "contextWord":  "手",
+        "contextReading":  "て",
+        "jmdictEntryId":  "1327190",
+        "readingKana":  "て"
+    },
+    {
+        "glyph":  "米",
+        "frequencyRank":  61,
+        "contextWord":  "米",
+        "contextReading":  "こめ",
+        "jmdictEntryId":  "1508750",
+        "readingKana":  "こめ"
+    },
+    {
+        "glyph":  "力",
+        "frequencyRank":  62,
+        "contextWord":  "力",
+        "contextReading":  "ちから",
+        "jmdictEntryId":  "1554820",
+        "readingKana":  "ちから"
+    },
+    {
+        "glyph":  "学",
+        "frequencyRank":  63,
+        "contextWord":  "学生",
+        "contextReading":  "がくせい",
+        "jmdictEntryId":  "1206900",
+        "readingKana":  "がく"
+    },
+    {
+        "glyph":  "問",
+        "frequencyRank":  64,
+        "contextWord":  "問題",
+        "contextReading":  "もんだい",
+        "jmdictEntryId":  "1536010",
+        "readingKana":  "もん"
+    },
+    {
+        "glyph":  "高",
+        "frequencyRank":  65,
+        "contextWord":  "高い",
+        "contextReading":  "たかい",
+        "jmdictEntryId":  "1283190",
+        "readingKana":  "たか"
+    },
+    {
+        "glyph":  "代",
+        "frequencyRank":  66,
+        "contextWord":  "時代",
+        "contextReading":  "じだい",
+        "jmdictEntryId":  "1316300",
+        "readingKana":  "だい"
+    },
+    {
+        "glyph":  "明",
+        "frequencyRank":  67,
+        "contextWord":  "明るい",
+        "contextReading":  "あかるい",
+        "jmdictEntryId":  "1532350",
+        "readingKana":  "あか"
+    },
+    {
+        "glyph":  "実",
+        "frequencyRank":  68,
+        "contextWord":  "実",
+        "contextReading":  "み",
+        "jmdictEntryId":  "1320810",
+        "readingKana":  "み"
+    },
+    {
+        "glyph":  "円",
+        "frequencyRank":  69,
+        "contextWord":  "円",
+        "contextReading":  "えん",
+        "jmdictEntryId":  "1175570",
+        "readingKana":  "えん"
+    },
+    {
+        "glyph":  "関",
+        "frequencyRank":  70,
+        "contextWord":  "関係",
+        "contextReading":  "かんけい",
+        "jmdictEntryId":  "1215810",
+        "readingKana":  "かん"
+    },
+    {
+        "glyph":  "決",
+        "frequencyRank":  71,
+        "contextWord":  "決める",
+        "contextReading":  "きめる",
+        "jmdictEntryId":  "1254180",
+        "readingKana":  "き"
+    },
+    {
+        "glyph":  "子",
+        "frequencyRank":  72,
+        "contextWord":  "子",
+        "contextReading":  "こ",
+        "jmdictEntryId":  "1307770",
+        "readingKana":  "こ"
+    },
+    {
+        "glyph":  "動",
+        "frequencyRank":  73,
+        "contextWord":  "動く",
+        "contextReading":  "うごく",
+        "jmdictEntryId":  "1451210",
+        "readingKana":  "うご"
+    },
+    {
+        "glyph":  "京",
+        "frequencyRank":  74,
+        "contextWord":  "東京",
+        "contextReading":  "とうきょう",
+        "jmdictEntryId":  "1447690",
+        "readingKana":  "きょう"
+    },
+    {
+        "glyph":  "全",
+        "frequencyRank":  75,
+        "contextWord":  "全部",
+        "contextReading":  "ぜんぶ",
+        "jmdictEntryId":  "1396130",
+        "readingKana":  "ぜん"
+    },
+    {
+        "glyph":  "目",
+        "frequencyRank":  76,
+        "contextWord":  "目",
+        "contextReading":  "め",
+        "jmdictEntryId":  "1604890",
+        "readingKana":  "め"
+    },
+    {
+        "glyph":  "表",
+        "frequencyRank":  77,
+        "contextWord":  "表",
+        "contextReading":  "おもて",
+        "jmdictEntryId":  "1489340",
+        "readingKana":  "おもて"
+    },
+    {
+        "glyph":  "戦",
+        "frequencyRank":  78,
+        "contextWord":  "戦う",
+        "contextReading":  "たたかう",
+        "jmdictEntryId":  "1596960",
+        "readingKana":  "たたか"
+    },
+    {
+        "glyph":  "経",
+        "frequencyRank":  79,
+        "contextWord":  "経験",
+        "contextReading":  "けいけん",
+        "jmdictEntryId":  "1251270",
+        "readingKana":  "けい"
+    },
+    {
+        "glyph":  "通",
+        "frequencyRank":  80,
+        "contextWord":  "通る",
+        "contextReading":  "とおる",
+        "jmdictEntryId":  "1433030",
+        "readingKana":  "とお"
+    },
+    {
+        "glyph":  "外",
+        "frequencyRank":  81,
+        "contextWord":  "外",
+        "contextReading":  "そと",
+        "jmdictEntryId":  "1203250",
+        "readingKana":  "そと"
+    },
+    {
+        "glyph":  "最",
+        "frequencyRank":  82,
+        "contextWord":  "最近",
+        "contextReading":  "さいきん",
+        "jmdictEntryId":  "1293780",
+        "readingKana":  "さい"
+    },
+    {
+        "glyph":  "言",
+        "frequencyRank":  83,
+        "contextWord":  "言う",
+        "contextReading":  "いう",
+        "jmdictEntryId":  "1587040",
+        "readingKana":  "い"
+    },
+    {
+        "glyph":  "氏",
+        "frequencyRank":  84,
+        "contextWord":  "氏名",
+        "contextReading":  "しめい",
+        "jmdictEntryId":  "1311060",
+        "readingKana":  "し"
+    },
+    {
+        "glyph":  "現",
+        "frequencyRank":  85,
+        "contextWord":  "現在",
+        "contextReading":  "げんざい",
+        "jmdictEntryId":  "1263650",
+        "readingKana":  "げん"
+    },
+    {
+        "glyph":  "理",
+        "frequencyRank":  86,
+        "contextWord":  "理由",
+        "contextReading":  "りゆう",
+        "jmdictEntryId":  "1550140",
+        "readingKana":  "り"
+    },
+    {
+        "glyph":  "調",
+        "frequencyRank":  87,
+        "contextWord":  "調べる",
+        "contextReading":  "しらべる",
+        "jmdictEntryId":  "1429060",
+        "readingKana":  "しら"
+    },
+    {
+        "glyph":  "体",
+        "frequencyRank":  88,
+        "contextWord":  "体",
+        "contextReading":  "からだ",
+        "jmdictEntryId":  "1409140",
+        "readingKana":  "からだ"
+    },
+    {
+        "glyph":  "化",
+        "frequencyRank":  89,
+        "contextWord":  "文化",
+        "contextReading":  "ぶんか",
+        "jmdictEntryId":  "1505120",
+        "readingKana":  "か"
+    },
+    {
+        "glyph":  "田",
+        "frequencyRank":  90,
+        "contextWord":  "田",
+        "contextReading":  "た",
+        "jmdictEntryId":  "1442730",
+        "readingKana":  "た"
+    },
+    {
+        "glyph":  "当",
+        "frequencyRank":  91,
+        "contextWord":  "当たる",
+        "contextReading":  "あたる",
+        "jmdictEntryId":  "1448810",
+        "readingKana":  "あ"
+    },
+    {
+        "glyph":  "八",
+        "frequencyRank":  92,
+        "contextWord":  "八",
+        "contextReading":  "はち",
+        "jmdictEntryId":  "1583090",
+        "readingKana":  "はち"
+    },
+    {
+        "glyph":  "六",
+        "frequencyRank":  93,
+        "contextWord":  "六",
+        "contextReading":  "ろく",
+        "jmdictEntryId":  "1585310",
+        "readingKana":  "ろく"
+    },
+    {
+        "glyph":  "約",
+        "frequencyRank":  94,
+        "contextWord":  "約束",
+        "contextReading":  "やくそく",
+        "jmdictEntryId":  "1538130",
+        "readingKana":  "やく"
+    },
+    {
+        "glyph":  "主",
+        "frequencyRank":  95,
+        "contextWord":  "主役",
+        "contextReading":  "しゅやく",
+        "jmdictEntryId":  "1326290",
+        "readingKana":  "しゅ"
+    },
+    {
+        "glyph":  "題",
+        "frequencyRank":  96,
+        "contextWord":  "問題",
+        "contextReading":  "もんだい",
+        "jmdictEntryId":  "1536010",
+        "readingKana":  "だい"
+    },
+    {
+        "glyph":  "下",
+        "frequencyRank":  97,
+        "contextWord":  "下",
+        "contextReading":  "した",
+        "jmdictEntryId":  "1184140",
+        "readingKana":  "した"
+    },
+    {
+        "glyph":  "首",
+        "frequencyRank":  98,
+        "contextWord":  "首",
+        "contextReading":  "くび",
+        "jmdictEntryId":  "1592270",
+        "readingKana":  "くび"
+    },
+    {
+        "glyph":  "意",
+        "frequencyRank":  99,
+        "contextWord":  "意味",
+        "contextReading":  "いみ",
+        "jmdictEntryId":  "1156800",
+        "readingKana":  "い"
+    },
+    {
+        "glyph":  "法",
+        "frequencyRank":  100,
+        "contextWord":  "方法",
+        "contextReading":  "ほうほう",
+        "jmdictEntryId":  "1517090",
+        "readingKana":  "ほう"
+    }
+]
