@@ -1,12 +1,12 @@
 # Device verification checklist
 
-**Status: pending on physical Android and iPhone.** The iOS simulator smoke test and remote CI workflow are also pending until a run is recorded. Automated tests with a fake recognizer verify application behavior; they do not measure native recognition accuracy or keyboard conversion behavior.
+**Status: Android release installation and native startup checked on a Pixel 9 Pro; lesson and input checks remain pending.** The iPhone, iOS simulator smoke test, and remote CI workflow are also pending until a run is recorded. Automated tests with a fake recognizer verify application behavior; they do not measure native recognition accuracy or keyboard conversion behavior.
 
 Record the date, commit, phone/simulator model, OS version, app build, Japanese keyboard, and model-download status for each run. Check a box only after observing the result, and attach failure details when a check fails.
 
 ## Installation and startup
 
-- [ ] Android API 24 or newer: install the APK, launch, and reach Learn with the bundled curriculum.
+- [x] Pixel 9 Pro, Android 17 (API 37), version 1.0.1: install the APK, launch, and reach Learn. Native startup passed; user confirmed the Learn screen appears. Other Android versions remain untested.
 - [ ] iOS simulator: complete the unsigned build and native smoke test; verify SQLite startup.
 - [ ] iPhone iOS 15.5 or newer: configure personal signing on a Mac, install, and reach Learn. Signing is not configured in the repository.
 - [ ] Open Library and inspect kana, combinations, symbol mini-lessons, and the ranked kanji list; verify Japanese text and stroke guides render.
@@ -51,6 +51,7 @@ Record the date, commit, phone/simulator model, OS version, app build, Japanese 
 
 | Date / commit | Target / OS / keyboard | Checks performed | Result / remaining issues |
 | --- | --- | --- | --- |
-| Pending | Physical Android | Not run | Pending |
+| 2026-10-16 / 1.0.0 build 1 | Pixel 9 Pro / Android 17 (API 37) | Reproduce immediate startup failure | Failed: WorkManager Room constructor removed by release optimization |
+| 2026-10-16 / 1.0.1 build 2 | Pixel 9 Pro / Android 17 (API 37) | Same-signature update; non-debuggable cold start, 15 seconds, scoped logs; user opened app | Passed native startup; no fatal errors; user confirmed Learn appears. Lesson/input testing pending |
 | Pending | iOS simulator / CI | Not run | Pending |
 | Pending | Physical iPhone | Not run | Signing and verification deferred |

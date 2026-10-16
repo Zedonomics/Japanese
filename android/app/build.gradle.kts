@@ -33,6 +33,7 @@ android {
             // Personal sideload build. Replace with a private upload key before
             // distributing publicly; the development keystore is never committed.
             signingConfig = signingConfigs.getByName("debug")
+            proguardFiles("proguard-rules.pro")
         }
     }
 }

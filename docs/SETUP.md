@@ -127,6 +127,6 @@ On Android or iPhone, open Settings and choose **Download model** while online. 
 
 ## CI
 
-`.github/workflows/mobile.yml` defines two jobs: Ubuntu analyzes, runs local tests, and builds a debug Android APK; macOS 15 builds an unsigned iOS simulator app and runs the native integration smoke test on an available iPhone simulator. CI uploads build artifacts for inspection. CI APKs use an ephemeral development key and should not be assumed compatible with an existing personal install. No store publication or device signing secrets are required.
+`.github/workflows/mobile.yml` defines two jobs: Ubuntu analyzes, runs local tests, builds the optimized release Android APK, and cold-starts that exact APK on an API 36 emulator; macOS 15 builds an unsigned iOS simulator app and runs the native integration smoke test on an available iPhone simulator. The Android gate checks release flags, a stable process, a resumed activity, loaded home-screen text, and fatal startup logs. CI uploads build artifacts and startup evidence for inspection. CI APKs use an ephemeral development key and should not be assumed compatible with an existing personal install. No store publication or device signing secrets are required.
 
 Native package and SDK downloads can make a clean CI run slower than a cached local run. A remote CI run and the physical-device checks remain pending until actually performed and recorded.

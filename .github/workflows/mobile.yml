@@ -10,9 +10,9 @@ permissions:
 
 jobs:
   android:
-    name: Android tests and APK
+    name: Android tests and release startup
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v6
         with:
@@ -44,13 +44,127 @@ jobs:
         run: flutter analyze
       - name: Unit and widget tests
         run: flutter test
-      - name: Build personal debug APK
-        run: flutter build apk --debug
+      - name: Build personal release APK
+        run: flutter build apk --release
       - uses: actions/upload-artifact@v4
         with:
-          name: android-debug-apk
-          path: build/app/outputs/flutter-apk/app-debug.apk
+          name: android-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
+          retention-days: 7
+      - name: Prepare release startup check
+        run: |
+          # Kept in this workflow because this script owns a disposable emulator.
+          # Phone testing uses tool/android_release_smoke.ps1 and preserves data.
+          cat > build/release-startup-smoke.py <<'PY'
+          import pathlib
+          import re
+          import subprocess
+          import time
+          import traceback
+          import xml.etree.ElementTree as ET
+
+          package = 'dev.kanapath.kana_path'
+          evidence = pathlib.Path('build/android-release-startup')
+          evidence.mkdir(parents=True, exist_ok=True)
+          samples = []
+          failures = []
+
+          def adb(*args, check=True, timeout=30):
+              result = subprocess.run(['adb', *args], text=True, stdout=subprocess.PIPE,
+                                      stderr=subprocess.STDOUT, timeout=timeout)
+              if check and result.returncode:
+                  raise RuntimeError(f'adb {args} failed: {result.stdout}')
+              return result.stdout.strip()
+
+          try:
+              adb('install', '-r', 'build/app/outputs/flutter-apk/app-release.apk', timeout=120)
+              manifest = adb('shell', 'dumpsys', 'package', package)
+              (evidence / 'installed-package.txt').write_text(manifest)
+              assert not re.search(r'^\s*(?:pkgFlags|flags)=\[[^\]\n]*\bDEBUGGABLE\b', manifest, re.M), 'Expected a non-debuggable release APK'
+              adb('shell', 'input', 'keyevent', 'KEYCODE_WAKEUP')
+              adb('shell', 'wm', 'dismiss-keyguard')
+              adb('shell', 'am', 'force-stop', package)
+              adb('logcat', '-c')  # Dedicated disposable emulator, never a user's phone.
+              launch = adb('shell', 'am', 'start', '-W', '-n', package + '/.MainActivity')
+              (evidence / 'launch.txt').write_text(launch)
+              assert 'Error:' not in launch, launch
+              for _ in range(15):
+                  samples.append(adb('shell', 'pidof', package, check=False))
+                  time.sleep(1)
+              (evidence / 'process-samples.txt').write_text('\n'.join(samples))
+              assert all(re.fullmatch(r'\d+', pid) for pid in samples), 'App process disappeared during startup'
+              assert len(set(samples)) == 1, 'App process restarted during startup'
+              activities = adb('shell', 'dumpsys', 'activity', 'activities')
+              resumed = '\n'.join(line for line in activities.splitlines() if re.search(r'\b(?:mResumedActivity|topResumedActivity|ResumedActivity)\s*[:=]', line))
+              (evidence / 'resumed-activity.txt').write_text(resumed)
+              assert package + '/' in resumed, 'Kana Path is not the foreground activity'
+              adb('shell', 'uiautomator', 'dump', '--compressed', '/sdcard/kana-path-startup.xml')
+              adb('pull', '/sdcard/kana-path-startup.xml', str(evidence / 'screen.xml'))
+              nodes = list(ET.parse(evidence / 'screen.xml').iter('node'))
+              labels = [node.get(attribute, '') for node in nodes for attribute in ('text', 'content-desc')]
+              assert any(label == 'Kana Path' for label in labels), 'Kana Path home screen did not load'
+              assert any(re.search(r'\bLearn\b', label) for label in labels), 'Learning navigation did not load'
+          except Exception:
+              failures.append(traceback.format_exc())
+          finally:
+              # Capture even when a content-provider crash happens before a PID
+              # can be sampled. Save only this package's runtime/tombstone lines.
+              try:
+                  raw = adb('logcat', '-d', '-b', 'main', '-b', 'system', '-b', 'crash', '-v', 'threadtime',
+                            'AndroidRuntime:V', 'flutter:V', 'Flutter:V', 'libc:V', 'DEBUG:V', 'ActivityManager:I', '*:S')
+                  records = []
+                  pids = {pid for pid in samples if pid.isdigit()}
+                  native_emitters = set()
+                  for line in raw.splitlines():
+                      record = re.match(r'^\d{2}-\d{2}\s+[\d:.]+\s+(\d+)\s+(\d+)\s+[VDIWEF]\s+(\S+)\s*:\s?(.*)$', line)
+                      if not record:
+                          continue
+                      pid, tid, tag, message = record.groups()
+                      records.append((line, pid, tid, tag, message))
+                      process = re.search(r'Process: ' + re.escape(package) + r', PID:\s*(\d+)', message)
+                      if process:
+                          pids.add(process.group(1))
+                      if tag == 'DEBUG' and package in message:
+                          native_emitters.add((pid, tid))
+                  scoped = '\n'.join(line for line, pid, tid, tag, message in records
+                                     if pid in pids or (pid, tid) in native_emitters or package in message)
+                  (evidence / 'kana-path-logcat.txt').write_text(scoped)
+                  if re.search(r'\b(?:FATAL EXCEPTION|Fatal signal\s+\d+|Abort message:|Unhandled Exception:)', scoped):
+                      failures.append('Fatal native/runtime or unhandled Dart exception during release startup.')
+                  screenshot = subprocess.run(['adb', 'exec-out', 'screencap', '-p'], capture_output=True, timeout=20)
+                  if screenshot.returncode == 0:
+                      (evidence / 'screen.png').write_bytes(screenshot.stdout)
+              except Exception:
+                  failures.append(traceback.format_exc())
+          (evidence / 'result.txt').write_text('\n'.join(failures) if failures else 'PASS: release startup, stable process, foreground, and loaded home screen.')
+          if failures:
+              raise SystemExit('\n'.join(failures))
+          print('PASS: installed release APK survived startup and loaded Kana Path home.')
+          PY
+      - name: Enable emulator KVM access
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Cold-start the exact release APK on Android
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7_pro
+          emulator-boot-timeout: 300
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: python3 build/release-startup-smoke.py
+      - name: Preserve release startup evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release-startup-evidence
+          path: build/android-release-startup/
+          if-no-files-found: warn
           retention-days: 7
 
   ios:
