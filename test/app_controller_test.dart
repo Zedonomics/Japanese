@@ -11,6 +11,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class FakeHandwriting implements HandwritingService {
   bool ready = true;
+  Completer<bool>? readinessGate;
   bool failDownload = false;
   Completer<void>? downloadGate;
   int downloads = 0;
@@ -21,7 +22,7 @@ class FakeHandwriting implements HandwritingService {
   double? lastHeight;
 
   @override
-  Future<bool> isReady() async => ready;
+  Future<bool> isReady() => readinessGate?.future ?? Future.value(ready);
 
   @override
   Future<void> download() async {
@@ -108,6 +109,34 @@ void main() {
     ],
     width: 240,
     height: 240,
+  );
+
+  test(
+    'an unresponsive handwriting readiness check cannot block startup lessons',
+    () async {
+      handwriting.readinessGate = Completer<bool>();
+      controller = AppController(
+        repository: repository,
+        handwriting: handwriting,
+        curriculumLoader: () async => items,
+        now: () => now,
+      );
+      expect(controller.loading, isTrue);
+      await controller.initialize().timeout(const Duration(seconds: 7));
+
+      expect(controller.loading, isFalse);
+      expect(controller.error, isNull);
+      expect(controller.modelStatus, HandwritingModelStatus.failed);
+      await begin(LessonFocus.reading);
+      await controller.submitText('a');
+      expect(controller.feedback!.outcome, ReviewOutcome.correct);
+      expect(controller.progress['h-a:reading']!.correctCount, 1);
+
+      // A failed readiness probe still permits the model's normal retry path.
+      await controller.downloadModel();
+      expect(controller.modelStatus, HandwritingModelStatus.ready);
+      expect(handwriting.downloads, 1);
+    },
   );
 
   test(

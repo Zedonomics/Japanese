@@ -113,7 +113,7 @@ flutter test integration_test/app_smoke_test.dart -d SIMULATOR_ID
 
 Use a dedicated simulator or test installation: the integration test writes real local progress and may replace an unfinished test lesson. It does not download the Japanese recognition model or verify handwriting accuracy. If a model is already available it can exercise the lesson canvas; a separate canvas check also works without a model.
 
-The smoke test and iOS build have not been executed on this Windows workspace. The CI workflow defines the corresponding simulator checks; a committed workflow is not evidence that they passed.
+The iOS build and smoke test run on macOS CI rather than this Windows workspace. The unsigned simulator build and native smoke test passed in [run 38967393443](https://github.com/Zedonomics/Japanese/actions/runs/38967393443). Its artifacts include the simulator package and test evidence. See the [build report](BUILD_REPORT.md) for the recorded results and tested source revision.
 
 ## Installing on your iPhone later
 
@@ -127,6 +127,8 @@ On Android or iPhone, open Settings and choose **Download model** while online. 
 
 ## CI
 
-`.github/workflows/mobile.yml` defines two jobs: Ubuntu analyzes, runs local tests, and builds a debug Android APK; macOS 15 builds an unsigned iOS simulator app and runs the native integration smoke test on an available iPhone simulator. CI uploads build artifacts for inspection. CI APKs use an ephemeral development key and should not be assumed compatible with an existing personal install. No store publication or device signing secrets are required.
+`.github/workflows/mobile.yml` defines two jobs: Ubuntu analyzes, runs local tests, builds the optimized release Android APK, and cold-starts that exact APK on an API 36 emulator; macOS 15 builds an unsigned iOS simulator app and runs the native integration smoke test on an available iPhone simulator. The Android gate checks release flags, a stable process, a resumed activity, loaded home-screen text, and fatal startup logs. CI uploads build artifacts and startup evidence for inspection. CI APKs use an ephemeral development key and should not be assumed compatible with an existing personal install. No store publication or device signing secrets are required.
 
-Native package and SDK downloads can make a clean CI run slower than a cached local run. A remote CI run and the physical-device checks remain pending until actually performed and recorded.
+The iOS CI job backports Flutter's [upstream simulator log-stream readiness fix](https://github.com/flutter/flutter/commit/c3ed85ef987759ee54a6bce275490cde2a238dc1) into the pinned Flutter 3.47.7 command-line tool. That fix addresses a race that can lose the VM-service announcement before integration tests start. CI verifies the SDK revision and exact patch SHA-256, applies only `flutter_tools/lib/src/ios/simulators.dart`, accepts a known already-applied patch in the SDK cache, and recompiles the tool snapshot. The Flutter framework, engine, Dart version, and app source remain pinned. Remove this workaround when adopting a stable SDK that contains the fix. Native test execution is bounded and records verbose launch output; failures also collect a simulator screenshot and Runner logs with thirty-second subprocess limits.
+
+Native package and SDK downloads can make a clean CI run slower than a cached local run. Android and iOS simulator CI passed, along with the recorded Pixel 9 Pro checks. Remaining physical-device scenarios are tracked in the [build report](BUILD_REPORT.md) and [device checklist](DEVICE_CHECKS.md).
