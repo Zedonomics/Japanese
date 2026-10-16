@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'ui_contract.dart';
@@ -20,6 +21,7 @@ class DrawingPad extends StatefulWidget {
 class DrawingPadState extends State<DrawingPad> {
   final List<InkStroke> _strokes = [];
   List<InkPoint>? _current;
+  int? _activePointer;
   Size _size = Size.zero;
 
   InkSubmission get submission => InkSubmission(
@@ -28,9 +30,21 @@ class DrawingPadState extends State<DrawingPad> {
     height: _size.height,
   );
 
-  void _begin(Offset point) {
-    if (!widget.enabled) return;
-    setState(() => _current = [_point(point)]);
+  @override
+  void didUpdateWidget(covariant DrawingPad oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!widget.enabled) {
+      _activePointer = null;
+      _current = null;
+    }
+  }
+
+  void _begin(PointerDownEvent event) {
+    if (!widget.enabled || _activePointer != null) return;
+    setState(() {
+      _activePointer = event.pointer;
+      _current = [_point(event.localPosition)];
+    });
   }
 
   InkPoint _point(Offset point) => InkPoint(
@@ -39,24 +53,37 @@ class DrawingPadState extends State<DrawingPad> {
     DateTime.now().millisecondsSinceEpoch,
   );
 
-  void _move(Offset point) {
-    if (!widget.enabled || _current == null) return;
-    setState(() => _current!.add(_point(point)));
+  void _move(PointerMoveEvent event) {
+    if (!widget.enabled || event.pointer != _activePointer) return;
+    setState(() => _current!.add(_point(event.localPosition)));
   }
 
-  void _finish() {
-    if (_current == null) return;
+  void _finish(PointerUpEvent event) {
+    if (event.pointer != _activePointer) return;
     setState(() {
+      final last = _current!.last;
+      final end = _point(event.localPosition);
+      if (last.x != end.x || last.y != end.y) _current!.add(end);
       _strokes.add(InkStroke(_current!));
       _current = null;
+      _activePointer = null;
     });
     widget.onChanged(_strokes.isNotEmpty);
+  }
+
+  void _cancel(PointerCancelEvent event) {
+    if (event.pointer != _activePointer) return;
+    setState(() {
+      _current = null;
+      _activePointer = null;
+    });
   }
 
   void clear() {
     setState(() {
       _strokes.clear();
       _current = null;
+      _activePointer = null;
     });
     widget.onChanged(false);
   }
@@ -87,24 +114,32 @@ class DrawingPadState extends State<DrawingPad> {
               height: height,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18),
-                child: GestureDetector(
+                // Claim only touches that begin in the writing cells before
+                // the lesson's vertical scroll recognizer can take them. Raw
+                // events retain taps and movement before the drag threshold.
+                child: RawGestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onPanDown: widget.enabled
-                      ? (event) => _begin(event.localPosition)
-                      : null,
-                  onPanUpdate: widget.enabled
-                      ? (event) => _move(event.localPosition)
-                      : null,
-                  onPanEnd: widget.enabled ? (_) => _finish() : null,
-                  onPanCancel: widget.enabled
-                      ? () => setState(() => _current = null)
-                      : null,
-                  onTapUp: widget.enabled ? (_) => _finish() : null,
-                  child: CustomPaint(
-                    painter: _InkPainter(
-                      strokes: _strokes,
-                      current: _current,
-                      cells: cells,
+                  gestures: widget.enabled
+                      ? {
+                          EagerGestureRecognizer:
+                              GestureRecognizerFactoryWithHandlers<
+                                EagerGestureRecognizer
+                              >(EagerGestureRecognizer.new, (_) {}),
+                        }
+                      : {},
+                  child: Listener(
+                    behavior: HitTestBehavior.opaque,
+                    onPointerDown: widget.enabled ? _begin : null,
+                    onPointerMove: widget.enabled ? _move : null,
+                    onPointerUp: widget.enabled ? _finish : null,
+                    onPointerCancel: widget.enabled ? _cancel : null,
+                    child: CustomPaint(
+                      key: const ValueKey('handwriting-canvas'),
+                      painter: _InkPainter(
+                        strokes: _strokes,
+                        current: _current,
+                        cells: cells,
+                      ),
                     ),
                   ),
                 ),

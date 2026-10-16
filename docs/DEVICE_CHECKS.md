@@ -53,5 +53,6 @@ Record the date, commit, phone/simulator model, OS version, app build, Japanese 
 | --- | --- | --- | --- |
 | 2026-10-16 / 1.0.0 build 1 | Pixel 9 Pro / Android 17 (API 37) | Reproduce immediate startup failure | Failed: WorkManager Room constructor removed by release optimization |
 | 2026-10-16 / 1.0.1 build 2 | Pixel 9 Pro / Android 17 (API 37) | Same-signature update; non-debuggable cold start, 15 seconds, scoped logs; user opened app | Passed native startup; no fatal errors; user confirmed Learn appears. Lesson/input testing pending |
+| 2026-10-16 / 1.0.1 build 2 | Pixel 9 Pro / Android 17 (API 37) | User completed lesson input/feedback/advance and downloaded handwriting model | Lesson and native model/recognition work. Failed canvas gesture: vertical-first strokes scroll the lesson; horizontal-first strokes can draw |
 | Pending | iOS simulator / CI | Not run | Pending |
 | Pending | Physical iPhone | Not run | Signing and verification deferred |

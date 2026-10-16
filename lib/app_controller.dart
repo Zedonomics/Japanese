@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'data/progress_repository.dart';
@@ -79,19 +80,29 @@ class AppController extends LearningController {
               _curriculum.length) {
         throw const FormatException('The bundled curriculum is incomplete.');
       }
+      debugPrint('Kana Path startup: curriculum loaded.');
       _repository ??= await ProgressRepository.open();
       await _reload();
+      debugPrint('Kana Path startup: progress storage ready.');
       try {
-        _modelStatus = await _handwriting.isReady()
+        debugPrint('Kana Path startup: checking handwriting model.');
+        // Optional native model detection must not indefinitely delay lessons.
+        _modelStatus =
+            await _handwriting.isReady().timeout(const Duration(seconds: 5))
             ? HandwritingModelStatus.ready
             : HandwritingModelStatus.unavailable;
+        debugPrint(
+          'Kana Path startup: handwriting model check finished (${_modelStatus.name}).',
+        );
       } catch (_) {
         _modelStatus = HandwritingModelStatus.failed;
+        debugPrint('Kana Path startup: handwriting model check failed.');
       }
     } catch (error) {
       _error = 'Could not open your lessons. ${_describe(error)}';
     } finally {
       _loading = false;
+      if (_error == null) debugPrint('Kana Path startup: lessons ready.');
       _notify();
     }
   }

@@ -56,10 +56,23 @@ void main() {
     );
     final answer = question.expectedAnswerFor(item);
     await tester.enterText(find.byType(TextField), answer);
+    // Text entry schedules the rebuild that enables Check answer. Wait for
+    // that frame before tapping, just as a person does on a real keyboard.
+    await tester.pump();
     final check = find.text('Check answer');
     await tester.ensureVisible(check);
+    expect(
+      tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Check answer'),
+      ).onPressed,
+      isNotNull,
+    );
     await tester.tap(check);
-    await waitUntil(tester, () => !controller.busy);
+    await waitUntil(
+      tester,
+      () => controller.feedback != null || controller.error != null,
+    );
+    expect(controller.error, isNull);
     expect(controller.feedback!.outcome, ReviewOutcome.correct);
     expect(controller.activeSession!.currentIndex, 0);
     expect(
@@ -95,12 +108,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    final canvas = find
-        .descendant(
-          of: find.byType(DrawingPad),
-          matching: find.byType(GestureDetector),
-        )
-        .first;
+    final canvas = find.byKey(const ValueKey('handwriting-canvas'));
     await tester.drag(canvas, const Offset(60, 50));
     await tester.pump();
     final state = tester.state<DrawingPadState>(find.byType(DrawingPad));

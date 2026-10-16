@@ -177,12 +177,7 @@ void main() {
           ),
         ),
       );
-      final canvas = find
-          .descendant(
-            of: find.byType(DrawingPad),
-            matching: find.byType(GestureDetector),
-          )
-          .first;
+      final canvas = find.byKey(const ValueKey('handwriting-canvas'));
       await tester.dragFrom(
         tester.getCenter(canvas) - const Offset(35, 30),
         const Offset(60, 50),

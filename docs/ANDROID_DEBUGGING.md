@@ -25,7 +25,7 @@ Once startup is fixed, use [DEVICE_CHECKS.md](DEVICE_CHECKS.md) to record real k
 To gate an installed **release** build rather than merely collect logs:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File tool/android_release_smoke.ps1 -ExpectedVersionCode 2
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tool/android_release_smoke.ps1 -ExpectedVersionCode 3
 ```
 
 Keep the phone unlocked. This reuses the crash collector and checks the non-debuggable version, stable running process, resumed activity, and fatal startup markers. It writes `release-startup-smoke.json` alongside the evidence and fails the command if any check fails. A resumed activity can remain behind the lock screen; visually confirm the Learn screen as well.
